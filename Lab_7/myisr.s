@@ -1,0 +1,181 @@
+
+;.globl resetInterrupt
+
+;ISR 
+  
+Reset:
+
+sti							;set the interrupt flag. Enable interrupts
+call resetInterrupt			;Call the interrupt handler
+cli							;clear the interrupt flag. Disable interrupts
+call signalEOI					;signal EOI to the PIC
+iret						;return
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+Tick:
+    					;1. Save the context 
+call save
+
+call YKEnterISR			;Call YKEnterISR
+    					;2. Enable interrupts
+call YKExitMutex		;sti						;set the interrupt flag. Enable interrupts
+    					;3. Run the interrupt handler
+call YKTickHandler
+call tickInterrupt		;OLD CODE
+    					;4. Disable interrupts.
+call YKEnterMutex		;cli				;clear the interrupt flag. Disable interrupts
+	   					;5. Send the EOI command to the PIC, 
+call signalEOI
+
+call YKExitISR			;Call YKExitISR
+    					;6. Restore the context
+
+call restore
+    					;7. Execute the iret instruction. 
+iret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+Keyboard:
+    					;1. Save the context 
+call save
+    					;2. Enable interrupts
+sti				;set the interrupt flag. Enable interrupts
+    					;3. Run the interrupt handler
+call keyboardInterrupt
+    					;4. Disable interrupts.
+cli				;clear the interrupt flag. Disable interrupts
+	   					;5. Send the EOI command to the PIC, 
+call signalEOI
+    					;6. Restore the context
+call restore
+    					;7. Execute the iret instruction. 
+iret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+SimptrisGameOver:
+    					
+call save				;1. Save the context 
+
+call YKEnterISR			;Call YKEnterISR
+    					;2. Enable interrupts
+call YKExitMutex		;sti						;set the interrupt flag. Enable interrupts
+    					;3. Run the interrupt handler
+call gameOverHandle
+    					;4. Disable interrupts.
+call YKEnterMutex		;cli				;clear the interrupt flag. Disable interrupts
+	   					;5. Send the EOI command to the PIC, 
+call signalEOI
+
+call YKExitISR			;Call YKExitISR
+    					;6. Restore the context
+
+call restore
+    					;7. Execute the iret instruction. 
+iret
+  
+SimptrisNewPiece:
+
+call save				;1. Save the context 
+
+call YKEnterISR			;Call YKEnterISR
+    					;2. Enable interrupts
+call YKExitMutex		;sti						;set the interrupt flag. Enable interrupts
+    					;3. Run the interrupt handler
+call newPieceHandle
+    					;4. Disable interrupts.
+call YKEnterMutex		;cli				;clear the interrupt flag. Disable interrupts
+	   					;5. Send the EOI command to the PIC, 
+call signalEOI
+
+call YKExitISR			;Call YKExitISR
+    					;6. Restore the context
+
+call restore
+    					;7. Execute the iret instruction. 
+iret
+  
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+SimptrisReceived:
+
+call save				;1. Save the context 
+
+call YKEnterISR			;Call YKEnterISR
+    					;2. Enable interrupts
+call YKExitMutex		;sti						;set the interrupt flag. Enable interrupts
+    					;3. Run the interrupt handler
+call recieveCommandHandle
+    					;4. Disable interrupts.
+call YKEnterMutex		;cli				;clear the interrupt flag. Disable interrupts
+	   					;5. Send the EOI command to the PIC, 
+call signalEOI
+
+call YKExitISR			;Call YKExitISR
+    					;6. Restore the context
+
+call restore
+    					;7. Execute the iret instruction. 
+iret
+   
+SimptrisTouchdown:
+
+call save				;1. Save the context 
+
+call YKEnterISR			;Call YKEnterISR
+    					;2. Enable interrupts
+call YKExitMutex		;sti						;set the interrupt flag. Enable interrupts
+    					;3. Run the interrupt handler
+call touchdownHandle
+    					;4. Disable interrupts.
+call YKEnterMutex		;cli				;clear the interrupt flag. Disable interrupts
+	   					;5. Send the EOI command to the PIC, 
+call signalEOI
+
+call YKExitISR			;Call YKExitISR
+    					;6. Restore the context
+
+call restore
+    					;7. Execute the iret instruction. 
+iret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+SimptrisClear:
+
+call save				;1. Save the context 
+
+call YKEnterISR			;Call YKEnterISR
+    					;2. Enable interrupts
+call YKExitMutex		;sti						;set the interrupt flag. Enable interrupts
+    					;3. Run the interrupt handler
+call lineClearHandle
+    					;4. Disable interrupts.
+call YKEnterMutex		;cli				;clear the interrupt flag. Disable interrupts
+	   					;5. Send the EOI command to the PIC, 
+call signalEOI
+
+call YKExitISR			;Call YKExitISR
+    					;6. Restore the context
+
+call restore
+    					;7. Execute the iret instruction. 
+iret
+
+
